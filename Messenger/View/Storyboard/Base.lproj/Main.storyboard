@@ -58,18 +58,19 @@
         <!--Tab Bar Controller-->
         <scene sceneID="XJ5-m8-XDB">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sLP-E7-pBM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <tabBarController id="SmK-0h-LKf" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zmb-Gy-ugf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <tabBarAppearance key="scrollEdgeAppearance" backgroundEffect="prominent"/>
                     </tabBar>
                     <connections>
                         <segue destination="2aE-5n-7dH" kind="relationship" relationship="viewControllers" id="Z62-l3-StO"/>
                         <segue destination="BiI-cR-w8E" kind="relationship" relationship="viewControllers" id="1Pz-Xp-NEr"/>
                     </connections>
                 </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sLP-E7-pBM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-680" y="-487"/>
         </scene>

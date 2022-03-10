@@ -7,8 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD()
     
     // Create container UIScrollView to embed the logo, user, password and button for login
     private let scrollView: UIScrollView = {
@@ -178,9 +181,15 @@ class RegisterViewController: UIViewController {
             alertUserRegisterError()
             return
         }
-        // Firebase new account registration
         
+        spinner.show(in: view)
+        
+        // Firebase new account registration
         FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
+            DispatchQueue.main.async {
+                self?.spinner.dismiss()
+            }
+            
             if let e = error {
                 self?.alertUserRegisterError(message: e.localizedDescription)
             } else {

@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Google services setup
         FirebaseApp.configure()
         
+        
         // Facebook setup
         ApplicationDelegate.shared.application(
             application,

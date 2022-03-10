@@ -9,8 +9,11 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     // Create container UIScrollView to embed the logo, user, password and button for login
     private let scrollView: UIScrollView = {
@@ -155,8 +158,15 @@ class LoginViewController: UIViewController {
             alertUserLoginError()
             return
         }
+        
+        spinner.show(in: view)
+        
         // Firebase login
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            DispatchQueue.main.async {
+                self?.spinner.dismiss()
+            }
+            
             if let e = error {
                 let errorString = e.localizedDescription
                 let ac = UIAlertController(title: "Error", message: errorString, preferredStyle: .alert)

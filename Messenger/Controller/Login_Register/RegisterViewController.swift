@@ -134,6 +134,7 @@ class RegisterViewController: UIViewController {
                                              action: #selector(didTapChangeProfilePic))
         
         imageView.addGestureRecognizer(gesture)
+        
     }
     
     @objc private func didTapChangeProfilePic() {
@@ -186,17 +187,39 @@ class RegisterViewController: UIViewController {
         
         // Firebase new account registration
         FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
+            guard let strongSelf = self else { return }
+            
             DispatchQueue.main.async {
-                self?.spinner.dismiss()
+                strongSelf.spinner.dismiss()
             }
             
             if let e = error {
-                self?.alertUserRegisterError(message: e.localizedDescription)
+                strongSelf.alertUserRegisterError(message: e.localizedDescription)
             } else {
-                DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
-                                                                    lastName: lastName,
-                                                                    emailAddress: email))
-                self?.navigationController?.dismiss(animated: true, completion: nil)
+                let chatUser = ChatAppUser(firstName: firstName,
+                                           lastName: lastName,
+                                           emailAddress: email)
+                DatabaseManager.shared.insertUser(with: chatUser) { success in
+                    if success {
+                        // upload image
+                        guard let image = strongSelf.imageView.image, let data = image.pngData() else {
+                            print("Failed to get image and image data")
+                            return
+                        }
+                        
+                        let fileName = chatUser.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                print(downloadUrl)
+                            case .failure(let error):
+                                print("Storage manager error: \(error)")
+                            }
+                        }
+                    }
+                }
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }
         }
     }

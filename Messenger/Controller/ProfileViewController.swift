@@ -8,8 +8,11 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import JGProgressHUD
 
 class ProfileViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
 
     @IBOutlet var tableView: UITableView!
     
@@ -46,19 +49,23 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let actionSheet = UIAlertController(title: "Are you sure you want to Log Out?", message: "", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
+        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [unowned self] _ in
+            self.spinner.show(in: view)
             
             // Log Out facebook
-            FBSDKLoginKit.LoginManager().logOut()  
+            FBSDKLoginKit.LoginManager().logOut()
             
             do {
                 try FirebaseAuth.Auth.auth().signOut()
-                
+                DispatchQueue.main.async {
+                    self.spinner.dismiss()
+                }
                 let vc = LoginViewController()
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
-                self?.present(nav, animated: true, completion: nil)
+                self.present(nav, animated: true, completion: nil)
             } catch {
+                self.spinner.dismiss()
                 print("Failed to log out")
             }
             

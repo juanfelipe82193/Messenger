@@ -229,37 +229,86 @@ extension LoginViewController: LoginButtonDelegate {
             return
         }
         
+        spinner.show(in: view)
+        
         let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
-                                                         parameters: ["fields": "email, name"],
+                                                         parameters: ["fields": "email, first_name, last_name, picture.type(large)"],
                                                          tokenString: AccessToken.current!.tokenString,
                                                          version: nil,
                                                          httpMethod: .get)
-        facebookRequest.start { _, result, error in
+        facebookRequest.start { [unowned self] _, result, error in
             guard let result = result as? [String: Any], error == nil else {
                 print("Failed to make facebook graph request")
+                DispatchQueue.main.async {
+                    self.spinner.dismiss()
+                }
                 return
             }
             
-            guard let userName = result["name"] as? String, let email = result["email"] as? String else {
-                print("Failed to get email and user name from Facebook results")
-                return
-            }
+            print(result)
             
-            let nameComponents = userName.components(separatedBy: " ")
-            print(nameComponents)
-            guard nameComponents.count >= 2 else {
-                print("Failed to get username separated")
-                return
-            }
+            guard let firstName = result["first_name"] as? String,
+                  let lastName = result["last_name"] as? String,
+                  let email = result["email"] as? String,
+                  let picture = result["picture"] as? [String: Any],
+                  let data = picture["data"] as? [String: Any],
+                  let pictureURL = data["url"] as? String else {
+                      print("Failed to get email and user name from Facebook results")
+                      DispatchQueue.main.async {
+                          self.spinner.dismiss()
+                      }
+                      return
+                  }
             
-            let firstName = nameComponents[0]
-            let lastName = nameComponents[1]
+//            let nameComponents = userName.components(separatedBy: " ")
+//            print(nameComponents)
+//            guard nameComponents.count >= 2 else {
+//                print("Failed to get username separated")
+//                DispatchQueue.main.async {
+//                    self.spinner.dismiss()
+//                }
+//                return
+//            }
+            
+//            let firstName = nameComponents[0]
+//            let lastName = nameComponents[1]
             
             DatabaseManager.shared.userExists(with: email) { exists in
                 if !exists {
-                    DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
-                                                                        lastName: lastName,
-                                                                        emailAddress: email))
+                    let chatUser = ChatAppUser(firstName: firstName,
+                                               lastName: lastName,
+                                               emailAddress: email)
+                    DatabaseManager.shared.insertUser(with: chatUser) { success in
+                        if success {
+                            guard let url = URL(string: pictureURL) else { return }
+                            
+                            print("Downloading data from Facebook Image")
+                            
+                            URLSession.shared.dataTask(with: url) { data, _, error in
+                                guard let data = data else {
+                                    print("Failed to get data from Facebook image")
+                                    return
+                                }
+                                
+                                print("Got data from Facebook, uploading...")
+                                
+                                // upload image
+                                let fileName = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                    switch result {
+                                    case .success(let downloadUrl):
+                                        UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                        print(downloadUrl)
+                                    case .failure(let error):
+                                        print("Storage manager error: \(error)")
+                                    }
+                                }
+                            }.resume()
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self.spinner.dismiss()
+                    }
                 }
             }
             
@@ -268,9 +317,14 @@ extension LoginViewController: LoginButtonDelegate {
             FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] authResult, error in
                 guard authResult != nil, error == nil else {
                     print("Facebook credential login failed, MFA may be required")
+                    DispatchQueue.main.async {
+                        self?.spinner.dismiss()
+                    }
                     return
                 }
-                
+                DispatchQueue.main.async {
+                    self?.spinner.dismiss()
+                }
                 print("Successfully logged user in")
                 self?.navigationController?.dismiss(animated: true, completion: nil)
             }

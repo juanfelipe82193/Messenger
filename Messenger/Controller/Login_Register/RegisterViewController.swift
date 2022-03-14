@@ -11,7 +11,7 @@ import JGProgressHUD
 
 class RegisterViewController: UIViewController {
     
-    private let spinner = JGProgressHUD()
+    private let spinner = JGProgressHUD(style: .dark)
     
     // Create container UIScrollView to embed the logo, user, password and button for login
     private let scrollView: UIScrollView = {

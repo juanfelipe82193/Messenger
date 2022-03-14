@@ -175,6 +175,9 @@ class LoginViewController: UIViewController {
                 self?.present(ac, animated: true, completion: nil)
             } else if let result = authResult {
                 let user = result.user
+                // Saving email to UserDefaults
+                UserDefaults.standard.set(email, forKey: "email")
+                
                 print("Logged In User: \(user)")
                 self?.navigationController?.dismiss(animated: true, completion: nil)
             }
@@ -260,18 +263,8 @@ extension LoginViewController: LoginButtonDelegate {
                       return
                   }
             
-//            let nameComponents = userName.components(separatedBy: " ")
-//            print(nameComponents)
-//            guard nameComponents.count >= 2 else {
-//                print("Failed to get username separated")
-//                DispatchQueue.main.async {
-//                    self.spinner.dismiss()
-//                }
-//                return
-//            }
-            
-//            let firstName = nameComponents[0]
-//            let lastName = nameComponents[1]
+            // Save email to UserDefaults
+            UserDefaults.standard.set(email, forKey: "email")
             
             DatabaseManager.shared.userExists(with: email) { exists in
                 if !exists {

@@ -26,6 +26,7 @@
 		E8CAC65927CAE80F00FE1EE6 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CAC65827CAE80F00FE1EE6 /* NewConversationViewController.swift */; };
 		E8CAC65B27CAE84A00FE1EE6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CAC65A27CAE84A00FE1EE6 /* ProfileViewController.swift */; };
 		E8CAC65E27CB241000FE1EE6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CAC65D27CB241000FE1EE6 /* Extensions.swift */; };
+		E8EE704027E53A1E00417CFC /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EE703F27E53A1E00417CFC /* ConversationTableViewCell.swift */; };
 		E8F176BC27DAB5C6005551D6 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F176BB27DAB5C5005551D6 /* StorageManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		E8CAC65827CAE80F00FE1EE6 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		E8CAC65A27CAE84A00FE1EE6 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		E8CAC65D27CB241000FE1EE6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E8EE703F27E53A1E00417CFC /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E8F176BB27DAB5C5005551D6 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +131,7 @@
 			children = (
 				E8CAC64F27CAE48600FE1EE6 /* Storyboard */,
 				E8CAC63F27CADBEC00FE1EE6 /* Assets.xcassets */,
+				E8EE703F27E53A1E00417CFC /* ConversationTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				E8CAC63727CADBEA00FE1EE6 /* AppDelegate.swift in Sources */,
 				E8CAC65B27CAE84A00FE1EE6 /* ProfileViewController.swift in Sources */,
 				E8CAC63927CADBEA00FE1EE6 /* SceneDelegate.swift in Sources */,
+				E8EE704027E53A1E00417CFC /* ConversationTableViewCell.swift in Sources */,
 				E8AF39AD27D9949100243071 /* ChatViewController.swift in Sources */,
 				E8CAC65527CAE7B000FE1EE6 /* PhotoViewerViewController.swift in Sources */,
 				E8F176BC27DAB5C6005551D6 /* StorageManager.swift in Sources */,

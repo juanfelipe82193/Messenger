@@ -212,7 +212,7 @@ class RegisterViewController: UIViewController {
                             switch result {
                             case .success(let downloadUrl):
                                 UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                print(downloadUrl)
+                                print("Profile picture uploaded sucessfully \(downloadUrl)")
                             case .failure(let error):
                                 print("Storage manager error: \(error)")
                             }

@@ -293,7 +293,7 @@ extension LoginViewController: LoginButtonDelegate {
             UserDefaults.standard.set(email, forKey: "email")
             UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
             
-            DatabaseManager.shared.userExists(with: email) { [unowned self] exists in
+            DatabaseManager.shared.userExists(with: email) { [weak self] exists in
                 if !exists {
                     let chatUser = ChatAppUser(firstName: firstName,
                                                lastName: lastName,
@@ -327,7 +327,7 @@ extension LoginViewController: LoginButtonDelegate {
                         }
                     }
                     DispatchQueue.main.async {
-                        self.spinner.dismiss()
+                        self?.spinner.dismiss()
                     }
                 }
             }

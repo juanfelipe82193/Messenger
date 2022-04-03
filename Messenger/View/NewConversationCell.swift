@@ -54,11 +54,11 @@ class NewConversationCell: UITableViewCell {
         self.userNameLabel.text = model.name
         
         let path = "images/\(model.email)_profile_picture.png"
-        StorageManager.shared.downloadURL(for: path) { [unowned self] result in
+        StorageManager.shared.downloadURL(for: path) { [weak self] result in
             switch result {
             case .success(let url):
                 DispatchQueue.main.async {
-                    self.userImageView.sd_setImage(with: url, completed: nil)
+                    self?.userImageView.sd_setImage(with: url, completed: nil)
                 }
             case .failure(let error):
                 print("Failed to get image url: \(error)")

@@ -79,9 +79,17 @@ class LoginViewController: UIViewController {
     // Google login button
     private let googleLogInButton = GIDSignInButton()
     
+    private var loginObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        })
         
         view.backgroundColor = .white
         title = "Log In"
@@ -115,6 +123,7 @@ class LoginViewController: UIViewController {
             // Print out access token
             print("FB Access Token: \(String(describing: AccessToken.current?.tokenString))")
         }
+        
         
         
     }

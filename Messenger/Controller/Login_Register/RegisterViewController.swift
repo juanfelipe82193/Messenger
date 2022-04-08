@@ -42,7 +42,7 @@ class RegisterViewController: UIViewController {
         field.placeholder = "First Name"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         return field
     }()
     // field
@@ -57,7 +57,7 @@ class RegisterViewController: UIViewController {
         field.placeholder = "Last Name"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         return field
     }()
     // email field
@@ -72,7 +72,7 @@ class RegisterViewController: UIViewController {
         field.placeholder = "Email"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         return field
     }()
     // password field
@@ -87,7 +87,7 @@ class RegisterViewController: UIViewController {
         field.placeholder = "Password"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         field.isSecureTextEntry = true
         return field
     }()
@@ -106,7 +106,7 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         title = "Register"
         
         registerButton.addTarget(self,

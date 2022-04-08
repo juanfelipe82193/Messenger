@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
         field.placeholder = "Email"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         return field
     }()
     // password field
@@ -55,7 +55,7 @@ class LoginViewController: UIViewController {
         field.placeholder = "Password"
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0 ))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         field.isSecureTextEntry = true
         return field
     }()
@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         })
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         title = "Log In"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
                                                             style: .done,

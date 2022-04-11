@@ -196,6 +196,9 @@ class RegisterViewController: UIViewController {
             if let e = error {
                 strongSelf.alertUserRegisterError(message: e.localizedDescription)
             } else {
+                UserDefaults.standard.setValue(email, forKey: "email")
+                UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                
                 let chatUser = ChatAppUser(firstName: firstName,
                                            lastName: lastName,
                                            emailAddress: email)

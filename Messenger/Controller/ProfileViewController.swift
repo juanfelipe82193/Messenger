@@ -56,6 +56,9 @@ class ProfileViewController: UIViewController {
                 guard let strongView = self?.view else { return }
                 strongSelf.spinner.show(in: strongView)
                 
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
+                
                 // Log Out facebook
                 FBSDKLoginKit.LoginManager().logOut()
                 

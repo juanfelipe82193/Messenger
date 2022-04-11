@@ -97,6 +97,11 @@ class LoginViewController: UIViewController {
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(didTapRegister))
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Test Crash",
+//                                                           style: .done,
+//                                                           target: self,
+//                                                           action: #selector(crashButtonTapped))
+        
         loginButton.addTarget(self,
                               action: #selector(loginButtonPressed),
                               for: .touchUpInside)
@@ -158,6 +163,11 @@ class LoginViewController: UIViewController {
                                          width: scrollView.width - 60,
                                          height: 52)
     }
+    
+//    @objc func crashButtonTapped() {
+//        let numbers = [0]
+//        let _ = numbers[1]
+//    }
     
     @objc private func loginButtonPressed() {
         emailField.resignFirstResponder()

@@ -11,22 +11,10 @@ import FBSDKLoginKit
 import JGProgressHUD
 import SDWebImage
 
-//MARK: - Struct definition
-
-enum ProfileViewModelType {
-    case info, logout
-}
-
-struct ProfileViewModel {
-    let viewModelType: ProfileViewModelType
-    let title: String
-    let handler: (() -> Void)?
-}
-
 
 //MARK: - ProfileViewController definition
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
 
@@ -155,15 +143,15 @@ class ProfileTableViewCell: UITableViewCell {
     static let identifier = "ProfileTableViewCell"
     
     public func setUp(with viewModel: ProfileViewModel) {
-        self.textLabel?.text = viewModel.title
+        textLabel?.text = viewModel.title
         
         switch viewModel.viewModelType {
         case .info:
-            self.textLabel?.textAlignment = .left
-            self.selectionStyle = .none
+            textLabel?.textAlignment = .left
+            selectionStyle = .none
         case .logout:
-            self.textLabel?.textColor = .red
-            self.textLabel?.textAlignment = .center
+            textLabel?.textColor = .red
+            textLabel?.textAlignment = .center
         }
     }
 }

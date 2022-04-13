@@ -8,7 +8,7 @@
 import UIKit
 import JGProgressHUD
 
-class NewConversationViewController: UIViewController {
+final class NewConversationViewController: UIViewController {
     
     public var completion: ((SearchResult) -> (Void))?
     
@@ -85,7 +85,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         results.removeAll()
         spinner.show(in: view)
         
-        self.searchUsers(query: text)
+        searchUsers(query: text)
     }
     
     func searchUsers(query: String) {
@@ -96,12 +96,12 @@ extension NewConversationViewController: UISearchBarDelegate {
             
         } else {
             // if not, fetch then filter
-            DatabaseManager.shared.getAllUsers { [unowned self] result in
+            DatabaseManager.shared.getAllUsers { [weak self] result in
                 switch result {
                 case .success(let usersCollection):
-                    self.hasFetched = true
-                    self.users = usersCollection
-                    self.filterUsers(with: query)
+                    self?.hasFetched = true
+                    self?.users = usersCollection
+                    self?.filterUsers(with: query)
                 case .failure(let error):
                     print("Failed to get users: \(error)")
                 }
@@ -117,9 +117,9 @@ extension NewConversationViewController: UISearchBarDelegate {
         
         let safeEmail = DatabaseManager.safeEmail(emailAddress: currentUserEmail)
         
-        self.spinner.dismiss()
+        spinner.dismiss()
         
-        let results: [SearchResult] = self.users.filter {
+        let results: [SearchResult] = users.filter {
             guard let email = $0["email"], email != safeEmail else {
                 return false
             }
@@ -144,12 +144,12 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func updateUI() {
         if results.isEmpty {
-            self.noResultsLabel.isHidden = false
-            self.tableView.isHidden = true
+            noResultsLabel.isHidden = false
+            tableView.isHidden = true
         } else {
-            self.noResultsLabel.isHidden = true
-            self.tableView.isHidden = false
-            self.tableView.reloadData()
+            noResultsLabel.isHidden = true
+            tableView.isHidden = false
+            tableView.reloadData()
         }
     }
     
@@ -174,8 +174,8 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
         tableView.deselectRow(at: indexPath, animated: true)
         // start conversation
         let targetUserData = results[indexPath.row]
-        dismiss(animated: true) { [unowned self] in
-            self.completion?(targetUserData)
+        dismiss(animated: true) { [weak self] in
+            self?.completion?(targetUserData)
         }
     }
     
@@ -185,11 +185,3 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     
 }
 
-
-//MARK: - Model definition
-
-struct SearchResult {
-    let name: String
-    let email: String
-    
-}

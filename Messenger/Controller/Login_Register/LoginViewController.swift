@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 import JGProgressHUD
 
-class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -275,11 +275,11 @@ extension LoginViewController: LoginButtonDelegate {
                                                          tokenString: AccessToken.current!.tokenString,
                                                          version: nil,
                                                          httpMethod: .get)
-        facebookRequest.start { [unowned self] _, result, error in
+        facebookRequest.start { [weak self] _, result, error in
             guard let result = result as? [String: Any], error == nil else {
                 print("Failed to make facebook graph request")
                 DispatchQueue.main.async {
-                    self.spinner.dismiss()
+                    self?.spinner.dismiss()
                 }
                 return
             }
@@ -294,7 +294,7 @@ extension LoginViewController: LoginButtonDelegate {
                   let pictureURL = data["url"] as? String else {
                       print("Failed to get email and user name from Facebook results")
                       DispatchQueue.main.async {
-                          self.spinner.dismiss()
+                          self?.spinner.dismiss()
                       }
                       return
                   }

@@ -10,8 +10,9 @@ import FirebaseDatabase
 import MessageKit
 import CoreLocation
 
+/// Manager object to read and write data to real time firebase database
 final class DatabaseManager {
-    
+    /// Shared instance of class
     static let shared = DatabaseManager()
     
     private let database = Database.database().reference()
@@ -27,8 +28,9 @@ final class DatabaseManager {
 
 extension DatabaseManager {
     
+    /// Returns dictionary node at child path
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        self.database.child("\(path)").observeSingleEvent(of: .value) { snapshot in
+        database.child("\(path)").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
                 completion(.failure(DataBaseError.failedToFetch))
                 return
@@ -44,6 +46,10 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     
+    /// Checks if user exists for given email
+    /// Parameters
+    ///  - `email`:              Target email to be checked
+    ///  - `completion`:   Async closure to return with result
     public func userExists(with email: String, completion: @escaping ((Bool) -> Void)) {
         let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
         database.child(safeEmail).observeSingleEvent(of: .value) { snapshot in
@@ -62,14 +68,14 @@ extension DatabaseManager {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
-        ]) { error, _ in
+        ]) { [weak self] error, _ in
             guard error == nil else {
                 print("failed to write to database")
                 completion(false)
                 return
             }
             // Create user collection for later query
-            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
+            self?.database.child("users").observeSingleEvent(of: .value) { [weak self] snapshot in
                 if var usersCollection = snapshot.value as? [[String : String]] {
                     // append to user dictionary
                     let newElement = [
@@ -78,7 +84,7 @@ extension DatabaseManager {
                     ]
                     usersCollection.append(newElement)
                     
-                    self.database.child("users").setValue(usersCollection) { error, _ in
+                    self?.database.child("users").setValue(usersCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
@@ -95,7 +101,7 @@ extension DatabaseManager {
                         ]
                     ]
                     
-                    self.database.child("users").setValue(newCollection) { error, _ in
+                    self?.database.child("users").setValue(newCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
@@ -121,6 +127,7 @@ extension DatabaseManager {
         }
     }
     
+    /// Gets all users from database
     public func getAllUsers(completion: @escaping (Result<[[String : String]], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value as? [[String : String]] else {
@@ -185,7 +192,7 @@ extension DatabaseManager {
         
         let ref = database.child(safeEmail)
         
-        ref.observeSingleEvent(of: .value) { [unowned self] snapshot in
+        ref.observeSingleEvent(of: .value) { [weak self] snapshot in
             guard var userNode = snapshot.value as? [String : Any] else {
                 completion(false)
                 print("user not found")
@@ -245,14 +252,14 @@ extension DatabaseManager {
             ]
             
             // Update recipient conversation entry
-            self.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) { [unowned self] snapshot in
+            self?.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) { [weak self] snapshot in
                 if var conversations = snapshot.value as? [[String : Any]] {
                     // append
                     conversations.append(recipient_newConversationData)
-                    self.database.child("\(otherUserEmail)/conversations").setValue(conversations)
+                    self?.database.child("\(otherUserEmail)/conversations").setValue(conversations)
                 } else {
                     // create
-                    self.database.child("\(otherUserEmail)/conversations").setValue([recipient_newConversationData])
+                    self?.database.child("\(otherUserEmail)/conversations").setValue([recipient_newConversationData])
                 }
             }
             
@@ -263,13 +270,13 @@ extension DatabaseManager {
                 // you should append
                 conversations.append(newConversationData)
                 userNode["conversations"] = conversations
-                ref.setValue(userNode) { [unowned self] error, _ in
+                ref.setValue(userNode) { [weak self] error, _ in
                     guard error == nil else {
                         completion(false)
                         return
                     }
                     
-                    self.finishCreatingConversation(conversationID: conversationID, name: name, firstMessage: firstMessage, completion: completion)
+                    self?.finishCreatingConversation(conversationID: conversationID, name: name, firstMessage: firstMessage, completion: completion)
                 }
             } else {
                 // conversation array does NOT exist
@@ -278,12 +285,12 @@ extension DatabaseManager {
                     newConversationData
                 ]
                 
-                ref.setValue(userNode) { [unowned self] error, _ in
+                ref.setValue(userNode) { [weak self] error, _ in
                     guard error == nil else {
                         completion(false)
                         return
                     }
-                    self.finishCreatingConversation(conversationID: conversationID, name: name, firstMessage: firstMessage, completion: completion)
+                    self?.finishCreatingConversation(conversationID: conversationID, name: name, firstMessage: firstMessage, completion: completion)
                 }
             }
         }
